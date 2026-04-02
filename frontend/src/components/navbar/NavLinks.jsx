@@ -5,7 +5,7 @@ export default function NavLinks() {
   const links = [
     { name: "Home", path: "/" },
     { name: "About", path: "/about" },
-    { name: "Stack", path: "/architecture" },
+    { name: "Stack", path: "/stack" },
     { name: "Architecture", path: "/architecture" },
   ];
 
