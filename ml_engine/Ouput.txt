@@ -1,0 +1,62 @@
+
+D:\PhishGuard-main\PhishGuard-main\ml_engine>python feature_extractor.py
+
+D:\PhishGuard-main\PhishGuard-main\ml_engine>python train.py
+Loading dataset...
+['id', 'having_IP_Address', 'URL_Length', 'Shortining_Service', 'having_At_Symbol', 'double_slash_redirecting', 'Prefix_Suffix', 'having_Sub_Domain', 'SSLfinal_State', 'Domain_registeration_length', 'Favicon', 'port', 'HTTPS_token', 'Request_URL', 'URL_of_Anchor', 'Links_in_tags', 'SFH', 'Submitting_to_email', 'Abnormal_URL', 'Redirect', 'on_mouseover', 'RightClick', 'popUpWidnow', 'Iframe', 'age_of_domain', 'DNSRecord', 'web_traffic', 'Page_Rank', 'Google_Index', 'Links_pointing_to_page', 'Statistical_report', 'Result', 'label']
+Training Random Forest...
+CV F1: 0.884 ± 0.013
+
+Test set report:
+              precision    recall  f1-score   support
+
+        safe       0.90      0.93      0.91      1231
+    phishing       0.91      0.87      0.89       980
+
+    accuracy                           0.90      2211
+   macro avg       0.90      0.90      0.90      2211
+weighted avg       0.90      0.90      0.90      2211
+
+Saved: D:\PhishGuard-main\PhishGuard-main\ml_engine\..\artifacts\model.pkl
+Saved: D:\PhishGuard-main\PhishGuard-main\ml_engine\..\artifacts\feature_importance.json
+
+D:\PhishGuard-main\PhishGuard-main\ml_engine>python evaluate.py
+=== Classification Report ===
+              precision    recall  f1-score   support
+
+        safe       0.90      0.93      0.91      1231
+    phishing       0.91      0.87      0.89       980
+
+    accuracy                           0.90      2211
+   macro avg       0.90      0.90      0.90      2211
+weighted avg       0.90      0.90      0.90      2211
+
+=== Confusion Matrix ===
+True Safe:     1144  |  False Alarm: 87
+Missed Phish:  131  |  Caught:      849
+
+=== Feature Importance ===
+has_https            █████████████████████████████ 0.749
+subdomain_count      ████ 0.109
+hyphen_count         ███ 0.091
+domain_age_days       0.022
+has_ip_in_url         0.012
+url_length            0.010
+has_at_symbol         0.007
+suspicious_tld        0.000
+domain_has_keywords   0.000
+
+D:\PhishGuard-main\PhishGuard-main\ml_engine>python predict.py
+
+D:\PhishGuard-main\PhishGuard-main\ml_engine>python test_single.py
+PHISHING    93  http://paypa1-secure.login.verify-account.com/update
+SAFE         0  https://github.com/login
+PHISHING    43  http://free-gift-claim.xyz/redeem?id=8821
+SAFE         0  https://mail.google.com
+PHISHING    43  http://verify-bank-login.net/secure/update
+SAFE         0  https://amazon.com
+PHISHING    43  http://signin-amazon-account.tk/login
+SAFE         8  http://192.168.1.1/admin
+SAFE         0  https://stackoverflow.com
+PHISHING    43  http://update-your-paypal.gq/confirm
+SAFE         0  https://retail.sbi.bank.in/retail/login.htm
