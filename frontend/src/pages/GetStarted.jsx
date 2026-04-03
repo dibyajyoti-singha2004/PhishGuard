@@ -4,10 +4,37 @@ import { useState } from "react";
 
 export default function GetStarted() {
   const [url, setUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleScan = () => {
-    navigate("/result", { state: { url } });
+  const handleScan = async () => {
+    if (!url) return; 
+    
+    setIsLoading(true);
+    try {
+      // Send the URL to your FastAPI backend
+      const response = await fetch("http://localhost:8000/api/scan", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: url }),
+      });
+
+      if (!response.ok) throw new Error("Backend Error");
+
+      // Receive the label, score, and explanation from ML Engine
+      const data = await response.json();
+      
+      // Navigate to the Result page and pass the data along
+      navigate("/result", { state: { url: url, scanData: data } });
+      
+    } catch (error) {
+      console.error("Error scanning URL:", error);
+      alert("Failed to connect. Is your FastAPI backend running on port 8000?");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -20,16 +47,17 @@ export default function GetStarted() {
           placeholder="Enter URL"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          className="px-4 py-2 rounded mb-4 w-80"
+          className="px-4 py-2 rounded mb-4 w-80 text-black border border-gray-300" 
         />
 
         <br />
 
         <button
           onClick={handleScan}
-          className="bg-black text-white px-6 py-2 rounded-full"
+          disabled={isLoading}
+          className="bg-black text-white px-6 py-2 rounded-full disabled:opacity-50 transition-opacity"
         >
-          Scan
+          {isLoading ? "Scanning..." : "Scan"}
         </button>
       </div>
     </PageWrapper>
