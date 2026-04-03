@@ -7,6 +7,7 @@ import About from "./pages/About";
 import Architecture from "./pages/Architecture";
 import GetStarted from "./pages/GetStarted";
 import Result from "./pages/Result";
+import Stack from "./pages/Stack";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/architecture" element={<Architecture />} />
         <Route path="/scan" element={<GetStarted />} />
         <Route path="/result" element={<Result />} />
+        <Route path="/stack" element={<Stack />} />
       </Routes>
     </Router>
   );
