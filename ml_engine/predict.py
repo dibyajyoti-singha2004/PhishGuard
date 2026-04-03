@@ -3,9 +3,9 @@ import json
 from feature_extractor import extract, to_vector, FEATURES
 import pandas as pd
 
-clf = joblib.load("F:/PhishGuard/artifacts/model.pkl")
+clf = joblib.load("../artifacts/model.pkl")
 
-with open("F:/PhishGuard/artifacts/feature_importance.json") as f:
+with open("../artifacts/feature_importance.json") as f:
     importance = json.load(f)
 
 THRESHOLDS = {"safe": 20, "suspicious": 35}
