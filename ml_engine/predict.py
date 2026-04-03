@@ -1,6 +1,7 @@
 import joblib
 import json
 from feature_extractor import extract, to_vector, FEATURES
+import pandas as pd
 
 clf = joblib.load("F:/PhishGuard/artifacts/model.pkl")
 
@@ -9,11 +10,17 @@ with open("F:/PhishGuard/artifacts/feature_importance.json") as f:
 
 THRESHOLDS = {"safe": 30, "suspicious": 70}
 
+print(clf.feature_names_in_)
+
 def predict(url: str) -> dict:
     features = extract(url)
-    vector   = [to_vector(features)]
 
-    proba      = clf.predict_proba(vector)[0]
+    vector = pd.DataFrame(
+    [[features[f] for f in clf.feature_names_in_]],
+    columns=clf.feature_names_in_
+    )
+
+    proba = clf.predict_proba(vector)[0]
     phish_prob = round(proba[1] * 100)
 
     if phish_prob < THRESHOLDS["safe"]:
@@ -24,10 +31,10 @@ def predict(url: str) -> dict:
         label = "phishing"
 
     return {
-        "label":       label,
-        "score":       phish_prob,
-        "confidence":  phish_prob if label == "phishing" else 100 - phish_prob,
-        "features":    features,
+        "label": label,
+        "score": phish_prob,
+        "confidence": phish_prob if label == "phishing" else 100 - phish_prob,
+        "features": features,
         "explanation": build_explanation(features, label),
     }
 
@@ -55,3 +62,12 @@ def build_explanation(features: dict, label: str) -> str:
         return "Multiple weak phishing signals detected."
 
     return "Flagged because: " + ", ".join(reasons) + "."
+
+
+
+
+
+
+
+
+
