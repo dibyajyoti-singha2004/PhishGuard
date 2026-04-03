@@ -64,11 +64,11 @@ def extract(url: str) -> dict:
     age = _get_domain_age_days(extracted.registered_domain)
     domain_age_days = 1 if age > 365 else -1
 
-    # NEW: suspicious TLD
+    
     tld = extracted.suffix.lower()
     suspicious_tld = -1 if tld in SUSPICIOUS_TLDS else 1
 
-    # NEW: phishing keywords in domain
+    
     domain_words = re.split(r"[-.]", full_domain)
     has_keyword = any(w in PHISHING_KEYWORDS for w in domain_words)
     domain_has_keywords = -1 if has_keyword else 1
@@ -86,7 +86,6 @@ def extract(url: str) -> dict:
     }
 
 def _get_domain_age_days(domain: str) -> int:
-    #global _whois_cache
     if not domain:
         return 0
 
