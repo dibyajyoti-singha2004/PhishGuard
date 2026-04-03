@@ -39,7 +39,7 @@ def build_feature_matrix(df: pd.DataFrame) -> pd.DataFrame:
 
 if __name__ == "__main__":
     print("Loading dataset...")
-    df = load_uci_dataset("F:/PhishGuard/uci-ml-phishing-dataset.csv")
+    df = load_uci_dataset("../uci-ml-phishing-dataset.csv")
     print(df.columns.tolist())
 
     X = build_feature_matrix(df)
