@@ -5,13 +5,13 @@ from sklearn.metrics import classification_report, confusion_matrix
 from train import load_uci_dataset, build_feature_matrix
 from sklearn.model_selection import train_test_split
 
-clf = joblib.load("F:/PhishGuard/artifacts/model.pkl")
-df  = load_uci_dataset("F:/PhishGuard/uci-ml-phishing-dataset.csv")
+clf = joblib.load("../artifacts/model.pkl")
+df  = load_uci_dataset("../uci-ml-phishing-dataset.csv")
 X   = build_feature_matrix(df)
 y   = df["label"]
 
 _, X_test, _, y_test = train_test_split(X, y, test_size=0.2,
-                                         random_state=42, stratify=y)
+                                            random_state=42, stratify=y)
 y_pred = clf.predict(X_test)
 
 print("=== Classification Report ===")
@@ -23,7 +23,7 @@ print(f"True Safe:     {cm[0][0]}  |  False Alarm: {cm[0][1]}")
 print(f"Missed Phish:  {cm[1][0]}  |  Caught:      {cm[1][1]}")
 
 print("\n=== Feature Importance ===")
-with open("F:/PhishGuard/artifacts/feature_importance.json") as f:
+with open("../artifacts/feature_importance.json") as f:
     imp = json.load(f)
 for feat, score in imp.items():
     bar = "█" * int(score * 40)
