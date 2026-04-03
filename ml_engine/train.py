@@ -18,22 +18,24 @@ def load_uci_dataset(path: str) -> pd.DataFrame:
     return df
 
 def build_feature_matrix(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    UCI dataset already has extracted features.
-    Map UCI column names to our feature names.
-    """
     col_map = {
-        "having_IP_Address":        "has_ip_in_url",
-        "URL_Length":               "url_length",
-        "having_Sub_Domain":        "subdomain_count",
-        "SSLfinal_State":           "has_https",
-        "having_At_Symbol":         "has_at_symbol",
-        "Prefix_Suffix":            "hyphen_count",
+        "having_IP_Address":           "has_ip_in_url",
+        "URL_Length":                  "url_length",
+        "having_Sub_Domain":           "subdomain_count",
+        "SSLfinal_State":              "has_https",
+        "having_At_Symbol":            "has_at_symbol",
+        "Prefix_Suffix":               "hyphen_count",
         "Domain_registeration_length": "domain_age_days",
     }
 
-    X = df[list(col_map.keys())].rename(columns=col_map)
-    return X
+    X = df[list(col_map.keys())].rename(columns=col_map).copy()
+
+    # No raw URL column in UCI — set to neutral during training
+    # Model learns from 7 features; these 2 add signal only at inference
+    X["suspicious_tld"]      = 1
+    X["domain_has_keywords"] = 1
+
+    return X[FEATURES]  # FEATURES order from feature_extractor.py
 
 if __name__ == "__main__":
     print("Loading dataset...")
@@ -77,7 +79,7 @@ if __name__ == "__main__":
     print(f"Saved: {model_path}")
 
     # Save feature importance
-    importance = dict(zip(FEATURES, clf.feature_importances_))
+    importance = dict(zip(X.columns.tolist(), clf.feature_importances_))
     importance = dict(sorted(importance.items(), key=lambda x: x[1], reverse=True))
 
     importance_path = os.path.join(ARTIFACTS_DIR, "feature_importance.json")
