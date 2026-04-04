@@ -1,9 +1,11 @@
 {
-  "has_https": 0.7107118139083745,
-  "subdomain_count": 0.12109478689949517,
-  "hyphen_count": 0.10609604483887242,
-  "domain_age_days": 0.031573584098365304,
-  "has_ip_in_url": 0.013609693109683003,
-  "url_length": 0.00982531914817386,
-  "has_at_symbol": 0.007088757997035878
+  "has_https": 0.7488727535131146,
+  "subdomain_count": 0.10885181320489182,
+  "hyphen_count": 0.09100789499665629,
+  "domain_age_days": 0.02218437429960063,
+  "has_ip_in_url": 0.012371895165447294,
+  "url_length": 0.009739320001578157,
+  "has_at_symbol": 0.0069719488187114185,
+  "suspicious_tld": 0.0,
+  "domain_has_keywords": 0.0
 }
