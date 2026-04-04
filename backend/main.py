@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import sys
 import os
 
+
 # --- PATH ROUTING FIX ---
 # 1. Get the absolute path of the backend directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -20,7 +21,7 @@ sys.path.insert(0, parent_dir)
 try:
     from predict import predict
 except Exception as e:
-    print(f"🚨 CRITICAL IMPORT ERROR: {e}")
+    print(f" CRITICAL IMPORT ERROR: {e}")
 
 # Initialize FastAPI app
 app = FastAPI(title="PhishGuard API")
