@@ -7,6 +7,7 @@ from urllib.parse import urlparse
 import os 
 import sys
 import concurrent.futures
+from datetime import timezone
 
 _whois_cache = {}
 
@@ -36,7 +37,12 @@ PHISHING_KEYWORDS = {
 def extract(url: str) -> dict:
     parsed    = urlparse(url)
     extracted = tldextract.extract(url)
+
     full_domain = f"{extracted.subdomain}.{extracted.domain}.{extracted.suffix}".lower()
+
+    # ==============================
+    # BASIC FEATURES
+    # ==============================
 
     has_ip = bool(re.match(r"(\d{1,3}\.){3}\d{1,3}", parsed.netloc))
     has_ip_in_url = -1 if has_ip else 1
@@ -61,17 +67,47 @@ def extract(url: str) -> dict:
     has_at_symbol = -1 if "@" in url else 1
     hyphen_count = -1 if "-" in parsed.netloc else 1
 
-    age = _get_domain_age_days(extracted.registered_domain)
-    domain_age_days = 1 if age > 365 else -1
+    # ==============================
+    # DOMAIN AGE
+    # ==============================
 
-    
+    age = _get_domain_age_days(extracted.registered_domain)
+
+    if age == -1:
+        domain_age_days = 0   # unknown
+    elif age > 365:
+        domain_age_days = 1   # legit
+    else:
+        domain_age_days = -1  # new = suspicious
+
+    # ==============================
+    # KEYWORD DETECTION (FIXED)
+    # ==============================
+
+    # Domain keyword check (keep full list)
+    domain_words = re.split(r"[-.]", full_domain)
+    domain_keyword_flag = any(w in PHISHING_KEYWORDS for w in domain_words)
+
+    # Path keyword check (IGNORE GENERIC WORDS)
+    GENERIC_WORDS = {"login", "secure", "update", "verify", "signin"}
+
+    path = parsed.path.lower()
+    path_words = re.split(r"[\/\-_\.]", path)
+
+    path_keyword_flag = any(
+        word in PHISHING_KEYWORDS and word not in GENERIC_WORDS
+        for word in path_words
+    )
+
+    # Combine
+    domain_has_keywords = -1 if (domain_keyword_flag or path_keyword_flag) else 1
+
+    # ==============================
+    # TLD CHECK
+    # ==============================
+
     tld = extracted.suffix.lower()
     suspicious_tld = -1 if tld in SUSPICIOUS_TLDS else 1
-
-    
-    domain_words = re.split(r"[-.]", full_domain)
-    has_keyword = any(w in PHISHING_KEYWORDS for w in domain_words)
-    domain_has_keywords = -1 if has_keyword else 1
 
     return {
         "has_ip_in_url":       has_ip_in_url,
@@ -93,7 +129,7 @@ def _get_domain_age_days(domain: str) -> int:
         return _whois_cache[domain]
 
     def _lookup():
-        socket.setdefaulttimeout(3)
+        socket.setdefaulttimeout(8)  # increased socket timeout
         devnull = open(os.devnull, 'w')
         old_stderr = sys.stderr
         sys.stderr = devnull
@@ -106,15 +142,18 @@ def _get_domain_age_days(domain: str) -> int:
         if isinstance(creation, list):
             creation = creation[0]
         if creation:
-            return (datetime.now() - creation).days
-        return 0
+            now = datetime.now(timezone.utc)          # make now timezone-aware
+            creation = creation.replace(tzinfo=creation.tzinfo or timezone.utc)  # ensure creation is aware too
+            return (now - creation).days
+        return -1  
 
     try:
         with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
             future = executor.submit(_lookup)
-            result = future.result(timeout=3)
-    except Exception:
-        result = 0
+            result = future.result(timeout=8)  
+    except Exception as e:
+        pass
+        result = -1  
 
     _whois_cache[domain] = result
     return result
