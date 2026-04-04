@@ -1,18 +1,33 @@
 from predict import predict
+from feature_extractor import _get_domain_age_days
+from urllib.parse import urlparse
 
 urls = [
-    "http://paypa1-secure.login.verify-account.com/update",
-    "https://github.com/login",
-    "http://free-gift-claim.xyz/redeem?id=8821",
-    "https://mail.google.com",
-    "http://verify-bank-login.net/secure/update",
-    "https://amazon.com",
-    "http://signin-amazon-account.tk/login",
-    "http://192.168.1.1/admin",
-    "https://stackoverflow.com",
-    "http://update-your-paypal.gq/confirm",
+    "www.facebook.com",
+    "github.com/login",
+    "www.dghjdgf.com/paypal.co.uk/cycgi-bin/webscrcmd=_home-customer&nav=1/loading.php", 
+    "http://google.security-update.ml",
+    "https://amazon.in/ap/signin",
+    "http://randomsite.com/paypal/login",
+    "http://goo.gl/secure-update",
+    "http://example.com/a/b/c/d/e/f/login/paypal/update",
+    "http://google.com.verify-user.tk",
+    "www.aclaydance.com/ncpf.php"
+    "https://login.security.verify.instagram.account-warning.example.com"
 ]
 
 for url in urls:
+    if not url.startswith(("http://", "https://")):
+        url = "http://" + url
+
     result = predict(url)
-    print(f"{result['label'].upper():10} {result['score']:>3}  {url}")
+
+    domain = urlparse(url).netloc
+    if domain.startswith("www."):
+        domain = domain[4:]
+
+    domain_age = _get_domain_age_days(domain)
+
+    age_str = f"{domain_age} days" if domain_age != -1 else "UNKNOWN"
+
+    print(f"{result['label'].upper():10} {result['score']:>3}  Age: {age_str:>10} -> {url}")
