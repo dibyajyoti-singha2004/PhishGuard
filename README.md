@@ -10,7 +10,7 @@ Here is a look at PhishGuard in action:
 
 | Home Page | Scanner Interface | Results Dashboard |
 | :---: | :---: | :---: |
-| ![Home](FinalOutputsImages/1Home.png) | ![Scanner](FinalOutputsImages/2Scan.png) | ![Results](FinalOutputsImages/SafeOutput.png) | 
+| ![Home](FinalOutputsImages/1Home.png) | ![Scanner](FinalOutputsImages/2Scan.png) | ![Results](FinalOutputsImages/5SafeOutput.png) | 
 
 ---
 
