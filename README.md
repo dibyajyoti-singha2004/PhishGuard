@@ -10,7 +10,7 @@ Here is a look at PhishGuard in action:
 
 | Home Page | Scanner Interface | Results Dashboard |
 | :---: | :---: | :---: |
-| ![Home](FinalOutputsImages/home.png) | ![Scanner](FinalOutputsImages/scan.png) | ![Results](FinalOutputsImages/SafeOutput.png) |
+| ![Home](FinalOutputsImages/1Home.png) | ![Scanner](FinalOutputsImages/2Scan.png) | ![Results](FinalOutputsImages/SafeOutput.png) | 
 
 ---
 
@@ -95,7 +95,6 @@ To run this project locally, clone the repository and open three separate termin
 
 Prerequisites
 Node.js (v16+)
-
 Python (3.9+)
 
 Step 1: Execute the ML Pipeline
@@ -125,8 +124,9 @@ Open a second terminal window to start the Python backend.
 ```Bash
 cd backend
 uvicorn main:app --reload --port 8000
-The backend API is now running and listening on http://localhost:8000
 ```
+The backend API is now running and listening on http://localhost:8000
+
 
 Step 3: Start the React Frontend
 Open a third terminal window to boot up the user interface.
@@ -149,7 +149,7 @@ Request Body:
 
 ```JSON
 {
-  "url": "[http://example.com/login](http://example.com/login)"
+      "url": "https://login.security.verify.instagram.account-warning.example.com"
 }
 ```
 
@@ -157,19 +157,22 @@ Response (Success):
 
 ```JSON
 {
-  "label": "suspicious",
-  "score": 65,
-  "confidence": 35,
-  "features": {
-    "has_https": -1,
-    "url_length": 1,
-    "subdomain_count": 1,
-    "has_at_symbol": 1,
-    "hyphen_count": 1,
-    "has_ip_in_url": 1,
-    "domain_age_days": 1
-  },
-  "explanation": "Flagged because: uses HTTP instead of HTTPS."
+    "label": "suspicious",
+    "score": 21,
+    "confidence": 79,
+    "features": {
+        "has_ip_in_url": 1,
+        "url_length": 0,
+        "subdomain_count": -1,
+        "has_https": 1,
+        "has_at_symbol": 1,
+        "hyphen_count": -1,
+        "domain_age_days": 1,
+        "suspicious_tld": 1,
+        "domain_has_keywords": -1
+    },
+    "explanation": "Flagged because: has multiple subdomains, domain contains hyphens, domain contains phishing-related keywords.",
+    "domain_age": "Established"
 }
 ```
 
