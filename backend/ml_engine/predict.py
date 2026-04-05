@@ -1,6 +1,6 @@
 import joblib
 import json
-from feature_extractor import extract, FEATURES
+from .feature_extractor import extract, FEATURES
 import pandas as pd
 from urllib.parse import urlparse
 import tldextract
@@ -10,9 +10,9 @@ BRAND_KEYWORDS = {
     "bank", "apple", "microsoft"
 }
 
-clf = joblib.load("../artifacts/model.pkl")
+clf = joblib.load("artifacts/model.pkl")
 
-with open("../artifacts/feature_importance.json") as f:
+with open("artifacts/feature_importance.json") as f:
     importance = json.load(f)
 
 THRESHOLDS = {"safe": 20, "suspicious": 45}
@@ -20,7 +20,6 @@ THRESHOLDS = {"safe": 20, "suspicious": 45}
 
 def predict(url: str) -> dict:
 
-    # Fix URL parsing
     if not url.startswith(("http://", "https://")):
         url = "http://" + url
 
@@ -34,9 +33,6 @@ def predict(url: str) -> dict:
     proba = clf.predict_proba(vector)[0]
     phish_prob = round(proba[1] * 100)
 
-    
-    #  BRAND MISMATCH DETECTION
-    
     parsed = urlparse(url)
     extracted = tldextract.extract(url)
 
@@ -57,11 +53,6 @@ def predict(url: str) -> dict:
             "explanation": "Brand name found in URL path but not in domain."
         }
 
-    
-    # OTHER STRONG RULES
-    
-
-    # Unknown domain → suspicious
     if features["domain_age_days"] == 0:
         return {
             "label": "phishing",
@@ -71,7 +62,6 @@ def predict(url: str) -> dict:
             "explanation": "Domain age is unknown or unavailable."
         }
 
-    # IP-based URL → strong phishing signal
     if features["has_ip_in_url"] == -1:
         return {
             "label": "phishing",
@@ -80,10 +70,6 @@ def predict(url: str) -> dict:
             "features": features,
             "explanation": "URL uses IP address instead of domain."
         }
-
-
-    #  ML DECISION
-
 
     if phish_prob < THRESHOLDS["safe"]:
         label = "safe"
