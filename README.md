@@ -19,7 +19,7 @@ Here is a look at PhishGuard in action:
 * **Frontend:** React.js, Vite, Tailwind CSS, React Router
 * **Backend:** FastAPI, Uvicorn, Python
 * **Machine Learning:** Scikit-Learn (Random Forest Classifier), Joblib
-* **Data Extraction:** `tldextract`, `python-whois`, `urllib`
+* **Data Extraction:** `tldextract`, `python-whois`, `urllib`,`pandas`
 
 ---
 
