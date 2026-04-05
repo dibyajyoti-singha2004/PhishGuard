@@ -12,13 +12,13 @@ export default function GetStarted() {
 
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:8000/api/scan", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ url: url }),
-      });
+      const response = await fetch("https://phishguard-8ybg.onrender.com/api/scan", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ url: url }),
+});
 
       if (!response.ok) throw new Error("Backend Error");
 
@@ -27,7 +27,7 @@ export default function GetStarted() {
 
     } catch (error) {
       console.error("Error scanning URL:", error);
-      alert("Failed to connect. Is your FastAPI backend running on port 8000?");
+      alert("Failed to connect to backend server");
     } finally {
       setIsLoading(false);
     }
