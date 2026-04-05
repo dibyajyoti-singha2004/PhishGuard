@@ -1,5 +1,6 @@
 import joblib
 import json
+import os
 from .feature_extractor import extract, FEATURES
 import pandas as pd
 from urllib.parse import urlparse
@@ -10,11 +11,19 @@ BRAND_KEYWORDS = {
     "bank", "apple", "microsoft"
 }
 
-# ✅ FIXED PATH (2 levels up)
-clf = joblib.load("../../artifacts/model.pkl")
+# ✅ Robust path (WORKS ON RENDER + LOCAL)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# ✅ FIXED PATH (2 levels up)
-with open("../../artifacts/feature_importance.json") as f:
+model_path = os.path.join(BASE_DIR, "artifacts", "model.pkl")
+importance_path = os.path.join(BASE_DIR, "artifacts", "feature_importance.json")
+
+# Debug (optional - helps if still fails)
+print("MODEL PATH:", model_path)
+print("IMPORTANCE PATH:", importance_path)
+
+clf = joblib.load(model_path)
+
+with open(importance_path) as f:
     importance = json.load(f)
 
 THRESHOLDS = {"safe": 20, "suspicious": 45}
