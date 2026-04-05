@@ -5,7 +5,6 @@ import pandas as pd
 from urllib.parse import urlparse
 import tldextract
 
-# Only BRAND keywords (not generic ones like login)
 BRAND_KEYWORDS = {
     "paypal", "amazon", "google", "facebook",
     "bank", "apple", "microsoft"
@@ -35,9 +34,9 @@ def predict(url: str) -> dict:
     proba = clf.predict_proba(vector)[0]
     phish_prob = round(proba[1] * 100)
 
-    # ==============================
-    # BRAND MISMATCH DETECTION
-    # ==============================
+    
+    #  BRAND MISMATCH DETECTION
+    
     parsed = urlparse(url)
     extracted = tldextract.extract(url)
 
@@ -58,9 +57,9 @@ def predict(url: str) -> dict:
             "explanation": "Brand name found in URL path but not in domain."
         }
 
-    # ==============================
+    
     # OTHER STRONG RULES
-    # ==============================
+    
 
     # Unknown domain → suspicious
     if features["domain_age_days"] == 0:
@@ -82,9 +81,9 @@ def predict(url: str) -> dict:
             "explanation": "URL uses IP address instead of domain."
         }
 
-    # ==============================
-    # ML DECISION
-    # ==============================
+
+    #  ML DECISION
+
 
     if phish_prob < THRESHOLDS["safe"]:
         label = "safe"

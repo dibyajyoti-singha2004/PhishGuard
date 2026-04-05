@@ -12,8 +12,9 @@ urls = [
     "http://goo.gl/secure-update",
     "http://example.com/a/b/c/d/e/f/login/paypal/update",
     "http://google.com.verify-user.tk",
-    "www.aclaydance.com/ncpf.php"
-    "https://login.security.verify.instagram.account-warning.example.com"
+    "www.aclaydance.com/ncpf.php",
+    "https://login.security.verify.instagram.account-warning.example.com",
+    "https://onlinesbi.sbi.bank.in/"
 ]
 
 for url in urls:
@@ -30,4 +31,4 @@ for url in urls:
 
     age_str = f"{domain_age} days" if domain_age != -1 else "UNKNOWN"
 
-    print(f"{result['label'].upper():10} {result['score']:>3}  Age: {age_str:>10} -> {url}")
+    print(f"Risk Label: {result['label'].upper():10} Risk Score: {result['score']:>3}  Age: {age_str:>10} -> {url}")

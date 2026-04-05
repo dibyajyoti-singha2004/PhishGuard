@@ -124,4 +124,8 @@ Risk Label: PHISHING   Risk Score:  75  Age: 11192 days -> http://example.com/a/
 Risk Label: PHISHING   Risk Score:  93  Age:    UNKNOWN -> http://google.com.verify-user.tk
 Risk Label: PHISHING   Risk Score:  70  Age:    UNKNOWN -> http://www.aclaydance.com/ncpf.php
 Risk Label: SUSPICIOUS Risk Score:  21  Age: 11192 days -> https://login.security.verify.instagram.account-warning.example.com
+<<<<<<< Updated upstream
 Risk Label: SAFE       Risk Score:   6  Age:  7717 days -> https://onlinesbi.sbi.bank.in/
+=======
+Risk Label: SAFE       Risk Score:   6  Age:  7717 days -> https://onlinesbi.sbi.bank.in/
+>>>>>>> Stashed changes

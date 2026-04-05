@@ -10,8 +10,7 @@ df  = load_uci_dataset("../uci-ml-phishing-dataset.csv")
 X   = build_feature_matrix(df)
 y   = df["label"]
 
-_, X_test, _, y_test = train_test_split(X, y, test_size=0.2,
-                                            random_state=42, stratify=y)
+_, X_test, _, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 y_pred = clf.predict(X_test)
 
 print("=== Classification Report ===")

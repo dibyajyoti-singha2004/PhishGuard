@@ -8,11 +8,10 @@ export default function GetStarted() {
   const navigate = useNavigate();
 
   const handleScan = async () => {
-    if (!url) return; 
-    
+    if (!url) return;
+
     setIsLoading(true);
     try {
-      // Send the URL to your FastAPI backend
       const response = await fetch("http://localhost:8000/api/scan", {
         method: "POST",
         headers: {
@@ -23,12 +22,9 @@ export default function GetStarted() {
 
       if (!response.ok) throw new Error("Backend Error");
 
-      // Receive the label, score, and explanation from ML Engine
       const data = await response.json();
-      
-      // Navigate to the Result page and pass the data along
       navigate("/result", { state: { url: url, scanData: data } });
-      
+
     } catch (error) {
       console.error("Error scanning URL:", error);
       alert("Failed to connect. Is your FastAPI backend running on port 8000?");
@@ -39,26 +35,57 @@ export default function GetStarted() {
 
   return (
     <PageWrapper>
-      <div className="text-center">
-        <h2 className="text-2xl mb-4">Paste your link</h2>
+      <div className="flex flex-col items-center justify-center min-h-[70vh] w-full font-[NeueHelvetica]">
+        
+        <div className="text-center">
 
-        <input
-          type="text"
-          placeholder="Enter URL"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          className="px-4 py-2 rounded mb-4 w-80 text-black border border-gray-300" 
-        />
+          {/* Heading */}
+          <h2 className="text-6xl md:text-7xl font-medium mb-12 tracking-tight text-black leading-[100%]">
+            <span
+              className="italic font-normal"
+              style={{ fontFamily: "EditorialNewItalic" }}
+            >
+              Paste
+            </span>{" "}
+            <span className="font-[NeueHelvetica]">
+              - your link here.
+            </span>
+          </h2>
 
-        <br />
+          {/* Input */}
+          <div className="flex items-center bg-white/80 backdrop-blur-xl rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.15)] px-6 py-4 w-full max-w-[900px] mx-auto mb-10 border border-white/40 focus-within:border-black focus-within:shadow-2xl transition-all duration-300">
+            
+            <div className="bg-[#FF3B30] rounded-full h-8 w-8 flex items-center justify-center mr-3 shrink-0">
+              <span className="text-white text-sm">→</span>
+            </div>
 
-        <button
-          onClick={handleScan}
-          disabled={isLoading}
-          className="bg-black text-white px-6 py-2 rounded-full disabled:opacity-50 transition-opacity"
-        >
-          {isLoading ? "Scanning..." : "Scan"}
-        </button>
+            <input
+              type="text"
+              placeholder="Paste link here"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleScan()}
+              className="flex-1 outline-none text-xl bg-transparent placeholder-gray-500 text-gray-900"
+            />
+          </div>
+
+          {/* Button */}
+          <button
+            onClick={handleScan}
+            disabled={isLoading}
+            className="bg-black text-white px-14 py-4 rounded-full text-lg font-medium hover:scale-105 transition-all active:scale-95 disabled:opacity-50 flex items-center gap-3 mx-auto"
+          >
+            {isLoading ? (
+              "Scanning..."
+            ) : (
+              <>
+                <span>Scrutinize</span>
+                <span className="text-2xl">→</span>
+              </>
+            )}
+          </button>
+
+        </div>
       </div>
     </PageWrapper>
   );
